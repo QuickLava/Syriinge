@@ -129,13 +129,18 @@ namespace SyringeCore {
             return false;
         }
 
-        // Unload the plugin after getting metadata if TIMING_BOOT is not set
-        if (!(plg->getMetadata()->FLAGS.timing & TIMING_BOOT))
+        // Save the created plugin
+        Plugins.push(plg);
+
+        // if TIMING_BOOT, execute the plugin immediately
+        if (plg->getMetadata()->FLAGS.timing & TIMING_BOOT)
         {
-            plg->unload();
+            plg->execute();
+            return true;
         }
 
-        Plugins.push(plg);
+        // Otherwise, unload the plugin for now
+        plg->unload();
 
         return true;
     }

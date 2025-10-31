@@ -59,14 +59,13 @@ bool Plugin::load()
     this->metadata = reinterpret_cast<PluginPrologFN>(this->module->header->prologOffset)();
 
     // Check Syringe version compatibility
+    this->metadata->VERSION.toString(this->metadata->VERSION, buff);
+    OSReport("[Syringe] Loaded plugin (%s, v%s)\n", this->metadata->NAME, buff);
     if (this->metadata->VERSION != Version(SYRINGE_VERSION))
     {
-        this->metadata->VERSION.toString(this->metadata->VERSION, buff);
         OSReport("[Syringe] Warning: Plugin %s was built for Syringe v%s, but current version is v%s. This may cause instability.\n",
                  this->metadata->NAME, buff, SYRINGE_VERSION);
     }
-
-    OSReport("[Syringe] Loaded plugin (%s, v%s)\n", this->metadata->NAME, buff);
 
     return true;
 }
