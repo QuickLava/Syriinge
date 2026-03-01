@@ -79,14 +79,11 @@ void Plugin::unload()
 {
     OSReport("[Syringe] Unloading plugin (%s)\n", this->metadata->NAME);
 
-    // Restore original instructions for all hooks
-    this->core->undoHooksByOwner(this->id);
+    // Restore original instructions for all hooks, and then clear them.
+    this->core->removeHooksByOwner(this->id);
 
     // Clear all event listeners associated with this plugin
     this->clearEventHandlers();
-
-    // Clear hooks otherwise when reloading duplicates will be added
-    this->core->removeHooksByOwner(this->id);
 
     if (this->module)
     {
