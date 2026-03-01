@@ -106,15 +106,19 @@ namespace SyringeCore {
 
     void Hook::undo()
     {
-        // restore the original instruction at the target address
-        *(u32*)installedAt = originalInstr;
+        // Only attempt to restore the original instruction if we stil have its location recorded!
+        if (installedAt != NULL)
+        {
+            // Restore the original instruction at the target address
+            *(u32*)installedAt = originalInstr;
 
-        // invalidate instruction cache for the target address
-        ICInvalidateRange((void*)installedAt, 0x04);
+            // invalidate instruction cache for the target address
+            ICInvalidateRange((void*)installedAt, 0x04);
 
-        // Clear variables to reflect that the hook is no longer active
-        installedAt = NULL;
-        originalInstr = NULL;
+            // Clear variables to reflect that the hook is no longer active
+            installedAt = NULL;
+            originalInstr = NULL;
+        }
     }
 
     Trampoline::Trampoline(u32 originalInstr, u32 retAddr) : originalInstr(originalInstr), branch(0)
